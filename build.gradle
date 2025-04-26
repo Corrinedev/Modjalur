@@ -3,18 +3,34 @@ plugins {
 }
 
 group = 'com.corrinedev'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation 'org.apache.groovy:groovy:5.0.0-alpha-1'
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+configurations {
+    extraLibs
 }
 
-test {
-    useJUnitPlatform()
+dependencies {
+    implementation 'org.apache.groovy:groovy:5.0.0-alpha-1'
+    implementation("com.google.code.gson:gson:2.13.1")
+
+    extraLibs group: 'org.apache.groovy', name: 'groovy', version: '5.0.0-alpha-1'
+    extraLibs group: 'com.google.code.gson', name: 'gson', version: '2.13.1'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.corrinedev.Launcher',
+                'Implementation-Title': project.name,
+                'Implementation-Version': version
+        )
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from {
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }

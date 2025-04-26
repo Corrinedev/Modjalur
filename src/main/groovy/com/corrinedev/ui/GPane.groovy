@@ -1,4 +1,9 @@
 package com.corrinedev.ui
 
-class GPane {
+import javax.swing.JRootPane
+
+class GPane extends JRootPane {
+    GPane() {
+
+    }
 }
